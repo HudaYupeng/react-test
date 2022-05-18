@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>方宇鹏-湖大</title>
+</head>
+
+<body>
+    <div id="root">
+        <input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input
+            type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck">
+        <br>
+        <input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input
+            type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck">
+        <br>
+        <input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input
+            type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck">
+        <br>
+        <input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input
+            type="checkbox" class="boxCheck"><input type="checkbox" class="boxCheck"><input type="checkbox"
+            class="boxCheck"><input type="checkbox" class="boxCheck">
+    </div>
+
+    <script>
+        // 点击鼠标
+        (function () {
+            document.onmousedown = function () {
+                // 移动鼠标，创建选框
+                let boxList = [];
+                let boxes = document.querySelectorAll("input");
+                for (let i = 0; i < boxes.length; i++) {
+                    boxList.push(boxes[i]);
+                }
+                let isSelect = true;
+                // 获取事件触发后的event对象，做了一个兼容性处理
+                let evt = window.event || arguments[0];
+                // 存放鼠标点击初始位置
+                let startX = (evt.x || evt.clientX);
+                let startY = (evt.y || evt.clientY);
+                // 创建一个框选元素
+                let selDiv = document.createElement("div");
+                // 给框选元素添加css样式，使用绝对定位
+                selDiv.style.cssText =
+                    "position:absolute; width:0px; height:0px; font-size:0px; margin:0px; padding:0px; border:1px dashed #0099FF; z-index:1000; filter:alpha(opacity:60); opacity:0.6; display:none";
+                // 添加ID
+                selDiv.id = "selectDiv";
+                // appendChild()向节点添加最后一个子节点
+                document.body.appendChild(selDiv);
+                // 根据起始位置，添加定位
+                selDiv.style.left = startX + "px";
+                selDiv.style.top = startY + "px";
+                // 根据坐标给选框修改状态
+                let _x = null;
+                let _y = null;
+                document.onmousemove = function () {
+                    evt = window.event || arguments[0];
+                    if (isSelect) {
+                        if (selDiv.style.display == "none") {
+                            selDiv.style.display = "";
+                        }
+                        // 获取当前鼠标位置
+                        _x = (evt.x || evt.clientX);
+                        _y = (evt.y || evt.clientY);
+                        selDiv.style.left = Math.min(_x, startX) + 'px';
+                        selDiv.style.top = Math.min(_y, startY) + 'px';
+                        selDiv.style.width = Math.abs(_x - startX) + 'px';
+                        selDiv.style.height = Math.abs(_y - startY) + 'px';
+
+                        let _l = selDiv.offsetLeft;
+                        let _t = selDiv.offsetTop;
+                        let _w = selDiv.offsetWidth;
+                        let _h = selDiv.offsetHeight;
+                        for (let i = 0; i < boxList.length; i++) {
+                            let sl = boxList[i].offsetWidth + boxList[i].offsetLeft;
+                            let st = boxList[i].offsetHeight + boxList[i].offsetTop;
+                            if (sl > _l && st > _t && boxList[i].offsetLeft < _l + _w && boxList[i]
+                                .offsetTop < _t + _h) {
+                                boxList[i].checked = true;
+                            }
+                        }
+                    }
+                }
+
+                // 放开鼠标，选框消失
+                document.onmouseup = function () {
+                    isSelect = false;
+                    if (selDiv) {
+                        document.body.removeChild(selDiv);
+                    }
+
+                    boxList = null, _x = null, _y = null, selDiv = null, startX = null, startY = null, evt =
+                        null;
+                }
+
+                // 按其他地方重置
+                boxList.forEach((item, index) => {
+                    item.checked = false;
+                })
+            }
+        })();
+    </script>
+</body>
+
+</html>

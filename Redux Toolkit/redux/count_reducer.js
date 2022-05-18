@@ -8,7 +8,7 @@ const initState = 0 //初始化状态
 export default function countReducer(preState=initState,action){
 	const {type,data} = action
 	//根据type决定如何加工数据
-	switch (type) {
+	Routes(type) {
 		case INCREMENT: //如果是加
 			return preState + data
 		case DECREMENT: //若果是减
